@@ -9,8 +9,8 @@ import AVKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    var initiated: Bool = false
-    var space: CGFloat = 3.0
+    var initiated = false
+    var space = CGFloat(3.0)
     var score = Int(0)
     var player: AVPlayer? = nil
     
@@ -274,6 +274,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+        // NOP
     }
 }

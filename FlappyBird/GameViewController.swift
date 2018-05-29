@@ -10,7 +10,7 @@ import GameplayKit
 class GameViewController: UIViewController {
 
     @IBAction func close(_ sender: Any) {
-        if let view = self.view as! SKView?, let scene = view.scene as? GameScene {
+        if let view = self.view as? SKView, let scene = view.scene as? GameScene {
             scene.close()
         }
         self.navigationController?.popViewController(animated: true)
@@ -19,7 +19,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        if let view = self.view as! SKView?, let scene = SKScene(fileNamed: "GameScene") {
+        if let view = self.view as? SKView, let scene = SKScene(fileNamed: "GameScene") {
             
             if UIDevice.current.model.range(of: "iPad") != nil {
                 print("iPad")
