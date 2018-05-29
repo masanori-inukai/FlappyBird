@@ -97,7 +97,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.scoreLabel = SKLabelNode()
         self.scoreLabel = self.childNode(withName: "scoreLabel") as! SKLabelNode
         self.scoreLabel.text = "\(self.score)m"
-        self.scoreLabel.color = .gray
+        self.scoreLabel.color = .white
         self.scoreLabel.zPosition = 20
         self.scoreLabel.fontSize = 48
         self.scoreLabel.fontName = "HelveticaNeue-Bold"
