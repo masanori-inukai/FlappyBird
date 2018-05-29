@@ -44,18 +44,4 @@ class StartViewController: UIViewController {
             self.scoreLabel.text = "BestScore: \(score)m"
         }
     }
-    
-    // 画面の自動回転をさせない
-    override var shouldAutorotate: Bool {
-        get {
-            return false
-        }
-    }
-    
-    // 画面をPortraitに指定する
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        get {
-            return .portrait
-        }
-    }
 }
