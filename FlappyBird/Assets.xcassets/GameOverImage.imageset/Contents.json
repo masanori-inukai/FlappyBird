@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Game_Over_sign_video_game-512.png",
+      "filename" : "over.png",
       "scale" : "1x"
     },
     {

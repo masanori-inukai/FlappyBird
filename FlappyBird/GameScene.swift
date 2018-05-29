@@ -49,10 +49,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let bestScore = userDefaults.object(forKey: "saveData") as! String
         
         let bgmName: String
-        if Int(bestScore)! > 100 {
+        if Int(bestScore)! > 20 {
             bgmName = "bgSound3.mp3"
             self.space = 2.0
-        } else if Int(bestScore)! > 50 {
+        } else if Int(bestScore)! > 10 {
             bgmName = "bgSound2.mp3"
             self.space = 2.5
         } else {
@@ -67,6 +67,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let bgView1 = SKSpriteNode(imageNamed: "bg")
         bgView1.position = CGPoint(x: 0, y: 0)
         bgView1.size.height = self.size.height
+        bgView1.size.width = self.size.width
         bgView1.run(SKAction.repeatForever(SKAction.sequence([
             SKAction.moveTo(x: -self.size.width, duration: 4.0),
             SKAction.moveTo(x: 0, duration: 0.0)
@@ -75,6 +76,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let bgView2 = SKSpriteNode(imageNamed: "bg")
         bgView2.size.height = self.size.height
+        bgView2.size.width = self.size.width
         bgView2.position = CGPoint(x: self.frame.width, y: 0)
         bgView2.run(SKAction.repeatForever(SKAction.sequence([
             SKAction.moveTo(x: 0, duration: 4.0),
