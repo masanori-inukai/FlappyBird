@@ -27,10 +27,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let gameoverSound = SKAction.playSoundFileNamed("gameover.mp3", waitForCompletion: false)
     
     override func didMove(to view: SKView) {
-        
-        print(self.size)
-        print(self.frame)
-        
         if !self.initiated {
             self.initObjects()
             self.initiated = true
@@ -39,6 +35,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func close() {
+        let userDefaults = UserDefaults.standard
+        let bestScore = userDefaults.object(forKey: "saveData") as! String
+        if self.score > Int(bestScore)! {
+            userDefaults.set(String(self.score), forKey: "saveData")
+        }
         self.player?.pause()
         self.removeAllChildren()
     }
@@ -49,10 +50,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let bestScore = userDefaults.object(forKey: "saveData") as! String
         
         let bgmName: String
-        if Int(bestScore)! > 20 {
+        if Int(bestScore)! >= 14 {
             bgmName = "bgSound3.mp3"
             self.space = 2.0
-        } else if Int(bestScore)! > 10 {
+        } else if Int(bestScore)! >= 7 {
             bgmName = "bgSound2.mp3"
             self.space = 2.5
         } else {
