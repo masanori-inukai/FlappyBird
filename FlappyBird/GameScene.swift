@@ -64,6 +64,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.player?.seek(to: kCMTimeZero)
         self.player?.play()
         
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(repeatBGM),
+            name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+            object: self.player?.currentItem
+        )
+        
         let bgView1 = SKSpriteNode(imageNamed: "bg")
         bgView1.position = CGPoint(x: 0, y: 0)
         bgView1.size.height = self.size.height
@@ -136,6 +142,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             birdTexture.append(atlas.textureNamed("bird" + String(i)))
         }
         self.birdAnimation = SKAction.animate(with: birdTexture, timePerFrame: 0.25)
+    }
+    
+    @objc func repeatBGM(_ notification: Notification) {
+        self.player?.seek(to: kCMTimeZero)
+        self.player?.play()
     }
     
     fileprivate func restartObjects() {
