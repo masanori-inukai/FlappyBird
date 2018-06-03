@@ -36,6 +36,7 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JRN-us-yhJ">
                                 <rect key="frame" x="133.5" y="480" width="108" height="30"/>
+                                <color key="tintColor" red="0.93753331579999999" green="0.96494736410000004" blue="0.51816416629999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="スコアリセット">
                                     <color key="titleColor" red="0.40639145249709929" green="0.63951374760222512" blue="0.96494736405835546" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -43,6 +44,18 @@
                                     <action selector="resetScore:" destination="mSk-ts-HwC" eventType="touchUpInside" id="KDq-wh-f5s"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="y1i-g3-ND8">
+                                <rect key="frame" x="99.5" y="560" width="176" height="29"/>
+                                <segments>
+                                    <segment title="Easy"/>
+                                    <segment title="Normal"/>
+                                    <segment title="Hard"/>
+                                </segments>
+                                <color key="tintColor" red="0.10514322916666667" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="changeStage:" destination="mSk-ts-HwC" eventType="valueChanged" id="hxA-Iy-8Bp"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -50,9 +63,11 @@
                             <constraint firstItem="JRN-us-yhJ" firstAttribute="centerX" secondItem="pUe-AP-BlN" secondAttribute="centerX" id="0yl-eA-eqp"/>
                             <constraint firstAttribute="bottom" secondItem="X2I-gc-k5f" secondAttribute="bottom" id="1IQ-dU-ibf"/>
                             <constraint firstItem="X2I-gc-k5f" firstAttribute="top" secondItem="Xlc-xZ-0Id" secondAttribute="top" id="231-f2-BxI"/>
+                            <constraint firstItem="y1i-g3-ND8" firstAttribute="centerX" secondItem="Xlc-xZ-0Id" secondAttribute="centerX" id="3YM-lG-rbo"/>
                             <constraint firstItem="Gh6-V1-Dsf" firstAttribute="centerY" secondItem="Xlc-xZ-0Id" secondAttribute="centerY" id="77p-rs-Kd7"/>
                             <constraint firstItem="QoW-SN-53n" firstAttribute="centerX" secondItem="pUe-AP-BlN" secondAttribute="centerX" id="DZ8-oP-Pkr"/>
                             <constraint firstItem="Gh6-V1-Dsf" firstAttribute="centerX" secondItem="pUe-AP-BlN" secondAttribute="centerX" id="iNG-TK-IUb"/>
+                            <constraint firstItem="y1i-g3-ND8" firstAttribute="top" secondItem="JRN-us-yhJ" secondAttribute="bottom" constant="50" id="iUe-Ud-t47"/>
                             <constraint firstItem="pUe-AP-BlN" firstAttribute="trailing" secondItem="X2I-gc-k5f" secondAttribute="trailing" id="lhv-vV-GzZ"/>
                             <constraint firstItem="X2I-gc-k5f" firstAttribute="leading" secondItem="pUe-AP-BlN" secondAttribute="leading" id="s2O-p3-TVw"/>
                             <constraint firstItem="QoW-SN-53n" firstAttribute="top" secondItem="Gh6-V1-Dsf" secondAttribute="bottom" constant="10" id="sxV-nm-PWr"/>
@@ -63,6 +78,7 @@
                     <connections>
                         <outlet property="logo" destination="Gh6-V1-Dsf" id="CWl-9s-5uH"/>
                         <outlet property="scoreLabel" destination="QoW-SN-53n" id="ET5-8w-faA"/>
+                        <outlet property="stageSelect" destination="y1i-g3-ND8" id="WVS-TK-RsC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IBD-R1-X9W" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -14,23 +14,27 @@ protocol GameSceneDelegate: class {
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     weak var gameDelegate: GameSceneDelegate? = nil
-    var initiated = false
-    var space = CGFloat(3.0)
-    var score = Int(0)
-    var player: AVPlayer? = nil
+    var difficulty = 0
     
-    var bird = SKSpriteNode()
-    var birdAnimation = SKAction()
-    var gameOverImage = SKSpriteNode()
-    var blockingObjects = SKNode()
-    var scoreLabel = SKLabelNode()
-    var closeButton = SKSpriteNode()
+    fileprivate var initiated = false
+    fileprivate var pipeSpace = CGFloat(0.0)
+    fileprivate var pipeDuration = TimeInterval(0.0)
+    fileprivate var bgmName = ""
+    fileprivate var score = Int(0)
+    fileprivate var player: AVPlayer? = nil
     
-    var timer = Timer()
-    var gameTimer = Timer()
+    fileprivate var bird = SKSpriteNode()
+    fileprivate var birdAnimation = SKAction()
+    fileprivate var gameOverImage = SKSpriteNode()
+    fileprivate var blockingObjects = SKNode()
+    fileprivate var scoreLabel = SKLabelNode()
+    fileprivate var closeButton = SKSpriteNode()
     
-    let jumpSound = SKAction.playSoundFileNamed("jump.mp3", waitForCompletion: false)
-    let gameoverSound = SKAction.playSoundFileNamed("gameover.mp3", waitForCompletion: false)
+    fileprivate var timer = Timer()
+    fileprivate var gameTimer = Timer()
+    
+    fileprivate let jumpSound = SKAction.playSoundFileNamed("jump.mp3", waitForCompletion: false)
+    fileprivate let gameoverSound = SKAction.playSoundFileNamed("gameover.mp3", waitForCompletion: false)
     
     override func didMove(to view: SKView) {
         if !self.initiated {
@@ -42,9 +46,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func close() {
         let userDefaults = UserDefaults.standard
-        let bestScore = userDefaults.object(forKey: "saveData") as! String
+        let bestScore = userDefaults.object(forKey: "Score_\(self.difficulty)") as! String
         if self.score > Int(bestScore)! {
-            userDefaults.set(String(self.score), forKey: "saveData")
+            userDefaults.set(String(self.score), forKey: "Score_\(self.difficulty)")
         }
         self.player?.pause()
         self.removeAllChildren()
@@ -53,22 +57,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func initObjects() {
         
-        let userDefaults = UserDefaults.standard
-        let bestScore = userDefaults.object(forKey: "saveData") as! String
-        
-        let bgmName: String
-        if Int(bestScore)! >= 14 {
-            bgmName = "bgSound3.mp3"
-            self.space = 2.0
-        } else if Int(bestScore)! >= 7 {
-            bgmName = "bgSound2.mp3"
-            self.space = 2.5
-        } else {
-            bgmName = "bgSound1.mp3"
-            self.space = 3.0
+        switch self.difficulty {
+            case 0:
+                self.bgmName = "bgSound1.mp3"
+                self.pipeSpace = 3.0
+                self.pipeDuration = 4.0
+            case 1:
+                self.bgmName = "bgSound2.mp3"
+                self.pipeSpace = 2.5
+                self.pipeDuration = 4.0
+            case 2:
+                self.bgmName = "bgSound3.mp3"
+                self.pipeSpace = 2.0
+                self.pipeDuration = 4.0
+            default:
+                self.bgmName = "bgSound1.mp3"
+                self.pipeSpace = 3.0
+                self.pipeDuration = 4.0
+            break
         }
         
-        self.player = AVPlayer(url: Bundle.main.bundleURL.appendingPathComponent(bgmName))
+        self.player = AVPlayer(url: Bundle.main.bundleURL.appendingPathComponent(self.bgmName))
         self.player?.seek(to: kCMTimeZero)
         self.player?.play()
         
@@ -174,7 +183,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.scoreLabel.text = "\(score)m"
         self.gameOverImage.isHidden = true
         
-        // iPhoneX
         self.createGround(self.frame.origin.y)
         self.createGround(-self.frame.origin.y)
         
@@ -229,7 +237,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     @objc func createPipe() {
         let randamLength = arc4random() % UInt32(self.frame.size.height / 2)
         let offset = CGFloat(randamLength) - (self.frame.size.height / 4)
-        let gap = self.bird.size.height * self.space
+        let gap = self.bird.size.height * self.pipeSpace
         let pipeTopTexture = SKTexture(imageNamed: "pipeTop")
         let pipeTop = SKSpriteNode(texture: pipeTopTexture)
         pipeTop.position = CGPoint(
@@ -254,7 +262,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pipeBottom.physicsBody?.categoryBitMask = 2
         self.blockingObjects.addChild(pipeBottom)
         
-        let pipeMove = SKAction.moveBy(x: -self.frame.size.width - 100, y: 0, duration: 3)
+        let pipeMove = SKAction.moveBy(x: -self.frame.size.width - 100, y: 0, duration: self.pipeDuration)
         pipeTop.run(pipeMove, completion: {
             pipeTop.removeFromParent()
         })
@@ -273,9 +281,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.gameOverImage.isHidden = false
         
         let userDefaults = UserDefaults.standard
-        let bestScore = userDefaults.object(forKey: "saveData") as! String
+        let bestScore = userDefaults.object(forKey: "Score_\(self.difficulty)") as! String
         if self.score > Int(bestScore)! {
-            userDefaults.set(String(self.score), forKey: "saveData")
+            userDefaults.set(String(self.score), forKey: "Score_\(self.difficulty)")
         }
     }
     
