@@ -9,17 +9,17 @@ import GameplayKit
 
 class GameViewController: UIViewController {
 
-    @IBAction func close(_ sender: Any) {
-        if let view = self.view as? SKView, let scene = view.scene as? GameScene {
-            scene.close()
-        }
-        self.navigationController?.popViewController(animated: true)
-    }
+//    @IBAction func close(_ sender: Any) {
+//        if let view = self.view as? SKView, let scene = view.scene as? GameScene {
+//            scene.close()
+//        }
+//        self.navigationController?.popViewController(animated: true)
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        if let view = self.view as? SKView, let scene = SKScene(fileNamed: "GameScene") {
+        if let view = self.view as? SKView, let scene = SKScene(fileNamed: "GameScene") as? GameScene {
             
             if UIDevice.current.model.range(of: "iPad") != nil {
                 print("iPad")
@@ -31,11 +31,18 @@ class GameViewController: UIViewController {
                 }
                 scene.scaleMode = .aspectFill
             }
+            scene.gameDelegate = self
             view.presentScene(scene)
-            
             view.ignoresSiblingOrder = true
             view.showsFPS = true
             view.showsNodeCount = true
         }
+    }
+}
+
+extension GameViewController: GameSceneDelegate {
+    
+    func close() {
+        self.navigationController?.popViewController(animated: true)
     }
 }

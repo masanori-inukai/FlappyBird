@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QtU-Ug-BoX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QtU-Ug-BoX">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -76,24 +76,7 @@
                     <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t28-nc-txb">
-                                <rect key="frame" x="327" y="24" width="32" height="32"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="2dA-Dp-tCz"/>
-                                    <constraint firstAttribute="width" constant="32" id="OQz-si-Ghn"/>
-                                </constraints>
-                                <state key="normal" image="close"/>
-                                <connections>
-                                    <action selector="close:" destination="BV1-FR-VrT" eventType="touchUpInside" id="evW-FQ-V3v"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="t28-nc-txb" firstAttribute="top" secondItem="fCv-Nn-7SK" secondAttribute="top" constant="4" id="4eQ-zO-fVm"/>
-                            <constraint firstItem="fCv-Nn-7SK" firstAttribute="trailing" secondItem="t28-nc-txb" secondAttribute="trailing" constant="16" id="PGf-zh-RQ2"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="fCv-Nn-7SK"/>
                     </view>
                 </viewController>
@@ -121,7 +104,6 @@
     </scenes>
     <resources>
         <image name="bg" width="1024" height="1024"/>
-        <image name="close" width="768" height="768"/>
         <image name="logo" width="571" height="428"/>
     </resources>
 </document>

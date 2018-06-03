@@ -7,8 +7,13 @@ import SpriteKit
 import GameplayKit
 import AVKit
 
+protocol GameSceneDelegate: class {
+    func close() -> Void
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    weak var gameDelegate: GameSceneDelegate? = nil
     var initiated = false
     var space = CGFloat(3.0)
     var score = Int(0)
@@ -19,6 +24,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameOverImage = SKSpriteNode()
     var blockingObjects = SKNode()
     var scoreLabel = SKLabelNode()
+    var closeButton = SKSpriteNode()
     
     var timer = Timer()
     var gameTimer = Timer()
@@ -42,6 +48,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         self.player?.pause()
         self.removeAllChildren()
+        self.gameDelegate?.close()
     }
     
     fileprivate func initObjects() {
@@ -94,12 +101,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.timer = Timer()
         self.gameTimer = Timer()
 
+        self.initLabel()
+        
+        self.physicsWorld.contactDelegate = self
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: -8)
+        
+        self.gameOverImage = SKSpriteNode()
+        let gameOverTexture = SKTexture(imageNamed: "GameOverImage")
+        self.gameOverImage = SKSpriteNode(texture: gameOverTexture)
+        self.gameOverImage.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        self.gameOverImage.zPosition = 21
+        self.gameOverImage.isHidden = true
+        self.addChild(self.gameOverImage)
+        
+        self.blockingObjects = SKSpriteNode()
+        self.addChild(self.blockingObjects)
+        
+        self.initSpriteAnimate()
+    }
+    
+    fileprivate func initLabel() {
         self.score = Int(0)
         self.scoreLabel = SKLabelNode()
-        self.scoreLabel = self.childNode(withName: "scoreLabel") as! SKLabelNode
         self.scoreLabel.text = "\(self.score)m"
         self.scoreLabel.color = .white
         self.scoreLabel.zPosition = 20
+        self.scoreLabel.position = CGPoint(x: 0, y: self.size.height / 2 - 150)
         self.scoreLabel.fontSize = 48
         self.scoreLabel.fontName = "HelveticaNeue-Bold"
         
@@ -118,22 +145,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreBg.fillColor = scoreBgColor
         scoreBg.zPosition = 19
         self.scoreLabel.addChild(scoreBg)
+        self.addChild(self.scoreLabel)
         
-        self.physicsWorld.contactDelegate = self
-        self.physicsWorld.gravity = CGVector(dx: 0, dy: -8)
-        
-        self.gameOverImage = SKSpriteNode()
-        let gameOverTexture = SKTexture(imageNamed: "GameOverImage")
-        self.gameOverImage = SKSpriteNode(texture: gameOverTexture)
-        self.gameOverImage.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-        self.gameOverImage.zPosition = 21
-        self.gameOverImage.isHidden = true
-        self.addChild(self.gameOverImage)
-        
-        self.blockingObjects = SKSpriteNode()
-        self.addChild(self.blockingObjects)
-        
-        self.initSpriteAnimate()
+        self.closeButton = SKSpriteNode(texture: SKTexture(imageNamed: "close"))
+        self.closeButton.size = CGSize(width: 60, height: 60)
+        self.closeButton.position = CGPoint(x: self.size.width / 2 - 60, y: self.size.height / 2 - 120)
+        self.closeButton.zPosition = 20
+        self.closeButton.name = "closeButton"
+        self.addChild(self.closeButton)
     }
     
     fileprivate func initSpriteAnimate() {
@@ -261,6 +280,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        // 閉じるが押されたとき
+        if let touch = touches.first as UITouch? {
+            let location = touch.location(in: self)
+            if self.atPoint(location).name == "closeButton" {
+                self.close()
+                return
+            }
+        }
+        
         if self.gameOverImage.isHidden == false {
             self.gameOverImage.isHidden = true
             self.restartObjects()
