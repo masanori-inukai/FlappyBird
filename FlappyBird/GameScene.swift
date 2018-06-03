@@ -65,11 +65,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             case 1:
                 self.bgmName = "bgSound2.mp3"
                 self.pipeSpace = 2.5
-                self.pipeDuration = 4.0
+                self.pipeDuration = 3.5
             case 2:
                 self.bgmName = "bgSound3.mp3"
-                self.pipeSpace = 2.0
-                self.pipeDuration = 4.0
+                self.pipeSpace = 2.2
+                self.pipeDuration = 3.2
             default:
                 self.bgmName = "bgSound1.mp3"
                 self.pipeSpace = 3.0
@@ -235,11 +235,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func createPipe() {
-        let randamLength = arc4random() % UInt32(self.frame.size.height / 2)
+        let randamLength = arc4random() % UInt32(self.frame.size.height / 4)
         let offset = CGFloat(randamLength) - (self.frame.size.height / 4)
         let gap = self.bird.size.height * self.pipeSpace
-        let pipeTopTexture = SKTexture(imageNamed: "pipeTop")
-        let pipeTop = SKSpriteNode(texture: pipeTopTexture)
+        
+        let pipeTop = SKSpriteNode(texture: SKTexture(imageNamed: "pipeTop"))
         pipeTop.position = CGPoint(
             x: self.frame.midX + (self.frame.width / 2),
             y: self.frame.midY + (pipeTop.size.height / 2) + (gap / 2) + offset
@@ -250,8 +250,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pipeTop.physicsBody?.categoryBitMask = 2
         self.blockingObjects.addChild(pipeTop)
         
-        let pipeBottomTexture = SKTexture(imageNamed: "pipeBottom")
-        let pipeBottom = SKSpriteNode(texture: pipeBottomTexture)
+        let pipeBottom = SKSpriteNode(texture: SKTexture(imageNamed: "pipeBottom"))
         pipeBottom.position = CGPoint(
             x: self.frame.midX + (self.frame.width / 2),
             y: self.frame.midY - (pipeBottom.size.height / 2) - (gap / 2) + offset
@@ -262,7 +261,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pipeBottom.physicsBody?.categoryBitMask = 2
         self.blockingObjects.addChild(pipeBottom)
         
-        let pipeMove = SKAction.moveBy(x: -self.frame.size.width - 100, y: 0, duration: self.pipeDuration)
+        let pipeMove = SKAction.moveBy(x: -self.frame.size.width * 2 + 200, y: 0, duration: self.pipeDuration)
         pipeTop.run(pipeMove, completion: {
             pipeTop.removeFromParent()
         })
