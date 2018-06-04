@@ -52,6 +52,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         self.player?.pause()
         self.removeAllChildren()
+        self.removeAllActions()
         self.gameDelegate?.close()
     }
     
@@ -60,19 +61,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch self.difficulty {
             case 0:
                 self.bgmName = "bgSound1.mp3"
-                self.pipeSpace = 3.0
+                self.pipeSpace = 1.5
                 self.pipeDuration = 4.0
             case 1:
                 self.bgmName = "bgSound2.mp3"
-                self.pipeSpace = 2.5
+                self.pipeSpace = 1.25
                 self.pipeDuration = 3.5
             case 2:
                 self.bgmName = "bgSound3.mp3"
-                self.pipeSpace = 2.2
+                self.pipeSpace = 1.15
                 self.pipeDuration = 3.2
             default:
                 self.bgmName = "bgSound1.mp3"
-                self.pipeSpace = 3.0
+                self.pipeSpace = 1.5
                 self.pipeDuration = 4.0
             break
         }
@@ -87,7 +88,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             object: self.player?.currentItem
         )
         
-        let bgView1 = SKSpriteNode(imageNamed: "bg")
+        let bgView1 = SKSpriteNode(imageNamed: "Bg")
         bgView1.position = CGPoint(x: 0, y: 0)
         bgView1.size.height = self.size.height
         bgView1.size.width = self.size.width
@@ -97,7 +98,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ])))
         self.addChild(bgView1)
         
-        let bgView2 = SKSpriteNode(imageNamed: "bg")
+        let bgView2 = SKSpriteNode(imageNamed: "Bg")
         bgView2.size.height = self.size.height
         bgView2.size.width = self.size.width
         bgView2.position = CGPoint(x: self.frame.width, y: 0)
@@ -116,7 +117,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.gravity = CGVector(dx: 0, dy: -8)
         
         self.gameOverImage = SKSpriteNode()
-        let gameOverTexture = SKTexture(imageNamed: "GameOverImage")
+        let gameOverTexture = SKTexture(imageNamed: "Gameover")
         self.gameOverImage = SKSpriteNode(texture: gameOverTexture)
         self.gameOverImage.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         self.gameOverImage.zPosition = 21
@@ -156,7 +157,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.scoreLabel.addChild(scoreBg)
         self.addChild(self.scoreLabel)
         
-        self.closeButton = SKSpriteNode(texture: SKTexture(imageNamed: "close"))
+        self.closeButton = SKSpriteNode(texture: SKTexture(imageNamed: "CloseButton"))
         self.closeButton.size = CGSize(width: 60, height: 60)
         self.closeButton.position = CGPoint(x: self.size.width / 2 - 60, y: self.size.height / 2 - 120)
         self.closeButton.zPosition = 20
@@ -168,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let atlas = SKTextureAtlas(named: "Bird")
         var birdTexture = [SKTexture]()
         for i in 0...3 {
-            birdTexture.append(atlas.textureNamed("bird" + String(i)))
+            birdTexture.append(atlas.textureNamed("Bird" + String(i)))
         }
         self.birdAnimation = SKAction.animate(with: birdTexture, timePerFrame: 0.25)
     }
@@ -189,7 +190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.timer = Timer.scheduledTimer(
             timeInterval: 1.8,
             target: self,
-            selector: #selector(createPipe),
+            selector: #selector(createBlock),
             userInfo: nil,
             repeats: true
         )
@@ -202,7 +203,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             repeats: true
         )
         
-        let birdTexture = SKTexture(imageNamed: "bird0")
+        let birdTexture = SKTexture(imageNamed: "Bird0")
         self.bird = SKSpriteNode(texture: birdTexture)
         self.bird.size = CGSize(width: 100, height: 100)
         self.bird.position = CGPoint(
@@ -234,40 +235,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.scoreLabel.text = "\(score)m"
     }
     
-    @objc func createPipe() {
+    @objc func createBlock() {
         let randamLength = arc4random() % UInt32(self.frame.size.height / 4)
         let offset = CGFloat(randamLength) - (self.frame.size.height / 4)
-        let gap = self.bird.size.height * self.pipeSpace
+        let gap = (self.bird.size.height * 2) * self.pipeSpace
+        let positionX = self.frame.midX + (self.frame.width / 2)
         
-        let pipeTop = SKSpriteNode(texture: SKTexture(imageNamed: "pipeTop"))
-        pipeTop.position = CGPoint(
-            x: self.frame.midX + (self.frame.width / 2),
-            y: self.frame.midY + (pipeTop.size.height / 2) + (gap / 2) + offset
+        let blockT = SKSpriteNode(texture: SKTexture(imageNamed: "BlockT"))
+        blockT.position = CGPoint(
+            x: positionX,
+            y: self.frame.midY + (blockT.size.height / 2) + (gap / 2) + offset
         )
-        pipeTop.physicsBody = SKPhysicsBody(rectangleOf: pipeTop.size)
-        pipeTop.physicsBody?.isDynamic = false
-        pipeTop.zPosition = 15
-        pipeTop.physicsBody?.categoryBitMask = 2
-        self.blockingObjects.addChild(pipeTop)
+        blockT.physicsBody = SKPhysicsBody(rectangleOf: blockT.size)
+        blockT.physicsBody?.isDynamic = false
+        blockT.zPosition = 15
+        blockT.physicsBody?.categoryBitMask = 2
+        self.blockingObjects.addChild(blockT)
         
-        let pipeBottom = SKSpriteNode(texture: SKTexture(imageNamed: "pipeBottom"))
-        pipeBottom.position = CGPoint(
-            x: self.frame.midX + (self.frame.width / 2),
-            y: self.frame.midY - (pipeBottom.size.height / 2) - (gap / 2) + offset
+        let blockB = SKSpriteNode(texture: SKTexture(imageNamed: "BlockB"))
+        blockB.position = CGPoint(
+            x: positionX,
+            y: self.frame.midY - (blockB.size.height / 2) - (gap / 2) + offset
         )
-        pipeBottom.physicsBody = SKPhysicsBody(rectangleOf: pipeBottom.size)
-        pipeBottom.physicsBody?.isDynamic = false
-        pipeBottom.zPosition = 15
-        pipeBottom.physicsBody?.categoryBitMask = 2
-        self.blockingObjects.addChild(pipeBottom)
+        blockB.physicsBody = SKPhysicsBody(rectangleOf: blockB.size)
+        blockB.physicsBody?.isDynamic = false
+        blockB.zPosition = 15
+        blockB.physicsBody?.categoryBitMask = 2
+        self.blockingObjects.addChild(blockB)
         
-        let pipeMove = SKAction.moveBy(x: -self.frame.size.width * 2 + 200, y: 0, duration: self.pipeDuration)
-        pipeTop.run(pipeMove, completion: {
-            pipeTop.removeFromParent()
-        })
-        pipeBottom.run(pipeMove, completion: {
-            pipeBottom.removeFromParent()
-        })
+        let movePointX = -self.frame.size.width * 2 + 200
+        let moveT = SKAction.moveBy(x: movePointX, y: 0, duration: self.pipeDuration)
+        let moveB = SKAction.moveBy(x: movePointX, y: 0, duration: self.pipeDuration)
+        blockT.run(moveT) { blockT.removeFromParent() }
+        blockB.run(moveB) { blockB.removeFromParent() }
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
