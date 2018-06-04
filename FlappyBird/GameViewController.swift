@@ -26,6 +26,7 @@ class GameViewController: UIViewController {
             // iPhoneX
             if UIScreen.main.nativeBounds.height == 2436.0 {
                 scene.size = CGSize(width: 750, height: 1624)
+                scene.isPhoneX = true
             }
             scene.scaleMode = .aspectFill
         }

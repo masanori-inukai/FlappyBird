@@ -15,7 +15,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     weak var gameDelegate: GameSceneDelegate? = nil
     var difficulty = 0
+    var isPhoneX = false
     
+    fileprivate var changeBg = false
     fileprivate var initiated = false
     fileprivate var pipeSpace = CGFloat(0.0)
     fileprivate var pipeDuration = TimeInterval(0.0)
@@ -69,6 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.pipeDuration = 3.5
             case 2:
                 self.bgmName = "bgSound3.mp3"
+                self.changeBg = true
                 self.pipeSpace = 1.15
                 self.pipeDuration = 3.2
             default:
@@ -88,7 +91,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             object: self.player?.currentItem
         )
         
-        let bgView1 = SKSpriteNode(imageNamed: "Bg")
+        let bgName = self.changeBg ? "Bg" : "Sky"
+        
+        let bgView1 = SKSpriteNode(imageNamed: bgName)
         bgView1.position = CGPoint(x: 0, y: 0)
         bgView1.size.height = self.size.height
         bgView1.size.width = self.size.width
@@ -98,7 +103,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ])))
         self.addChild(bgView1)
         
-        let bgView2 = SKSpriteNode(imageNamed: "Bg")
+        let bgView2 = SKSpriteNode(imageNamed: bgName)
         bgView2.size.height = self.size.height
         bgView2.size.width = self.size.width
         bgView2.position = CGPoint(x: self.frame.width, y: 0)
@@ -184,8 +189,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.scoreLabel.text = "\(score)m"
         self.gameOverImage.isHidden = true
         
-        self.createGround(self.frame.origin.y)
-        self.createGround(-self.frame.origin.y)
+        if self.changeBg {
+            self.createNoImageGround(self.frame.origin.y)
+            self.createNoImageGround(-self.frame.origin.y)
+        } else {
+            self.createGround(self.frame.origin.y)
+            self.createNoImageGround(-self.frame.origin.y)
+        }
         
         self.timer = Timer.scheduledTimer(
             timeInterval: 1.8,
@@ -220,7 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.bird)
     }
     
-    fileprivate func createGround(_ y: CGFloat) {
+    fileprivate func createNoImageGround(_ y: CGFloat) {
         let ground = SKNode()
         ground.position = CGPoint(x: 0, y: y)
         ground.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.frame.size.width, height: 1))
@@ -228,6 +238,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ground.physicsBody?.categoryBitMask = 2
         ground.zPosition = 1
         self.blockingObjects.addChild(ground)
+    }
+        
+    fileprivate func createGround(_ y: CGFloat) {
+        let bottom = SKSpriteNode(texture: SKTexture(imageNamed: y > 0.0 ? "Top" : "Bottom"))
+        let bottomSize = CGSize(width: self.frame.size.width, height: self.isPhoneX ? 140 : 70)
+        
+        bottom.size = bottomSize
+        bottom.position = CGPoint(x: 0, y: y)
+        bottom.physicsBody = SKPhysicsBody(rectangleOf: bottomSize)
+        bottom.physicsBody?.isDynamic = false
+        bottom.physicsBody?.categoryBitMask = 2
+        bottom.zPosition = 100
+        self.blockingObjects.addChild(bottom)
     }
     
     @objc func updateScore() {
